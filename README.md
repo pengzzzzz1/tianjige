@@ -13,7 +13,7 @@
 
 ## 安装
 
-从 GitHub Releases 下载 `天机阁-1.5.0-Windows-x64.exe`，按照安装向导完成安装。
+从 GitHub Releases 下载 `Tianjige-1.5.0-Windows-x64.exe`，按照安装向导完成安装。
 
 系统要求：Windows 10/11 64 位，并保持网络连接。当前安装包暂未进行代码签名，Windows SmartScreen 可能显示“未知发布者”，可在确认文件来源后选择“更多信息”与“仍要运行”。
 
