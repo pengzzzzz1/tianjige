@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f6f5" />
+    <meta name="description" content="天机阁：聚合权威股票、投资、科技、数码、体育、经济与政策资讯，自动转换为中文。" />
+    <title>天机阁 · 实时资讯</title>
+    <link rel="icon" type="image/png" href="/assets/tianjige-icon-256.png" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="天机阁全域市场情报首页">
+          <span class="brand-mark" aria-hidden="true"><img src="/assets/tianjige-icon.png" alt="" /></span>
+          <span class="brand-copy">
+            <strong>天机阁</strong>
+            <small>实时新闻</small>
+          </span>
+        </a>
+
+        <div class="market-clock" aria-label="当前时间">
+          <span id="current-date">--</span>
+          <strong id="current-time">--:--:--</strong>
+          <span class="market-state"><i></i> 权威来源持续更新</span>
+        </div>
+
+        <label class="global-search" for="search-input">
+          <i data-lucide="search" aria-hidden="true"></i>
+          <input id="search-input" type="search" autocomplete="off" placeholder="搜索新闻、公司或主题" />
+          <kbd>Ctrl K</kbd>
+        </label>
+
+        <div class="top-actions">
+          <button class="icon-button" id="notification-button" type="button" title="开启订阅提醒" aria-label="开启订阅提醒">
+            <i data-lucide="bell"></i>
+          </button>
+          <button class="icon-button" id="refresh-button" type="button" title="立即刷新" aria-label="立即刷新">
+            <i data-lucide="refresh-cw"></i>
+          </button>
+          <button class="icon-button" id="settings-button" type="button" title="来源与设置" aria-label="来源与设置">
+            <i data-lucide="settings-2"></i>
+          </button>
+        </div>
+      </header>
+
+      <aside class="sidebar" aria-label="情报筛选">
+        <nav class="region-nav" aria-label="地区">
+          <button class="region-button active" type="button" data-region="all">
+            <i data-lucide="newspaper"></i><span>全部资讯</span><b id="count-all">0</b>
+          </button>
+          <button class="region-button" type="button" data-region="国内">
+            <i data-lucide="landmark"></i><span>国内资讯</span><b id="count-cn">0</b>
+          </button>
+          <button class="region-button" type="button" data-region="国际">
+            <i data-lucide="globe-2"></i><span>国际资讯</span><b id="count-global">0</b>
+          </button>
+          <button class="region-button" type="button" data-region="watch">
+            <i data-lucide="radar"></i><span>我的关注</span><b id="count-watch">0</b>
+          </button>
+        </nav>
+
+        <section class="sidebar-section watch-section">
+          <div class="section-heading">
+            <h2>关注词</h2>
+            <span>命中即提醒</span>
+          </div>
+          <form id="subscription-form" class="quick-add">
+            <label class="sr-only" for="subscription-input">添加股票代码、公司或主题</label>
+            <input id="subscription-input" maxlength="40" placeholder="代码 / 公司 / 主题" />
+            <button type="submit" title="添加关注词" aria-label="添加关注词"><i data-lucide="plus"></i></button>
+          </form>
+          <div id="subscription-list" class="subscription-list"></div>
+        </section>
+
+        <section class="sidebar-section source-mini-section">
+          <div class="section-heading">
+            <h2>来源状态</h2>
+            <button class="text-button" id="manage-sources-button" type="button">管理</button>
+          </div>
+          <div id="source-mini-list" class="source-mini-list"></div>
+        </section>
+
+        <div class="sidebar-foot">
+          <span class="status-dot" id="connection-dot"></span>
+          <div><strong id="connection-label">正在连接</strong><small id="last-updated">等待首次同步</small></div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <section class="signal-tape" aria-label="情报概览">
+          <div class="tape-lead"><i data-lucide="activity"></i><span>实时更新</span></div>
+          <div class="tape-metric"><span>24 小时</span><strong id="metric-24h">0</strong></div>
+          <div class="tape-metric"><span>政策监管</span><strong id="metric-policy">0</strong></div>
+          <div class="tape-metric"><span>中文覆盖</span><strong id="metric-translation">0%</strong></div>
+          <div class="tape-status"><span id="refresh-state">实时批量获取已开启</span><time id="next-refresh">--</time></div>
+        </section>
+
+        <section class="feed-header">
+          <div>
+            <p id="feed-eyebrow">全部地区 · 持续更新</p>
+            <h1 id="feed-title">最新资讯</h1>
+          </div>
+          <div class="feed-view-actions">
+            <label class="match-toggle">
+              <input id="match-only" type="checkbox" />
+              <span>只看关注</span>
+            </label>
+            <span id="result-count" class="result-count">0 条</span>
+          </div>
+        </section>
+
+        <div class="category-tabs" role="tablist" aria-label="情报类别">
+          <button class="category-tab active" type="button" data-category="all" role="tab">全部</button>
+          <button class="category-tab" type="button" data-category="要闻" role="tab">要闻</button>
+          <button class="category-tab" type="button" data-category="财经" role="tab">财经</button>
+          <button class="category-tab" type="button" data-category="股票" role="tab">股票</button>
+          <button class="category-tab" type="button" data-category="投资" role="tab">投资</button>
+          <button class="category-tab" type="button" data-category="科技" role="tab">科技</button>
+          <button class="category-tab" type="button" data-category="数码" role="tab">数码</button>
+          <button class="category-tab" type="button" data-category="体育" role="tab">体育</button>
+          <button class="category-tab" type="button" data-category="经济" role="tab">经济</button>
+          <button class="category-tab" type="button" data-category="政策" role="tab">政策</button>
+          <button class="category-tab" type="button" data-category="监管" role="tab">监管</button>
+          <button class="category-tab" type="button" data-category="交易" role="tab">交易</button>
+        </div>
+
+        <section id="news-feed" class="news-feed" aria-live="polite">
+          <div class="loading-state">
+            <span class="loader"></span>
+            <strong>正在接通情报源</strong>
+            <p>首次运行会抓取并翻译国内外信息。</p>
+          </div>
+        </section>
+      </main>
+
+      <aside class="insight-rail" aria-label="情报详情与脉络">
+        <section class="rail-section pulse-section">
+          <div class="rail-heading">
+            <div><span>分类分布</span><h2>今日更新</h2></div>
+            <i data-lucide="line-chart"></i>
+          </div>
+          <div class="pulse-grid">
+            <div><span>国内</span><strong id="pulse-cn">0</strong><div class="mini-bar"><i id="bar-cn"></i></div></div>
+            <div><span>国际</span><strong id="pulse-global">0</strong><div class="mini-bar"><i id="bar-global"></i></div></div>
+          </div>
+          <div id="topic-cloud" class="topic-cloud"></div>
+        </section>
+
+        <section class="rail-section detail-section" id="detail-panel">
+          <div class="detail-empty">
+            <i data-lucide="scan-search"></i>
+            <strong>选择一条情报</strong>
+            <p>查看中文摘要、完整正文和来源等级。</p>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <nav class="mobile-nav" aria-label="移动导航">
+      <button class="active" type="button" data-mobile-action="feed"><i data-lucide="newspaper"></i><span>情报</span></button>
+      <button type="button" data-mobile-action="watch"><i data-lucide="radar"></i><span>关注</span></button>
+      <button type="button" data-mobile-action="sources"><i data-lucide="rss"></i><span>来源</span></button>
+      <button type="button" data-mobile-action="settings"><i data-lucide="settings-2"></i><span>设置</span></button>
+    </nav>
+
+    <dialog id="settings-dialog" class="settings-dialog">
+      <form method="dialog" class="dialog-head">
+        <div><span>设置</span><h2>来源与刷新</h2></div>
+        <button class="icon-button" value="cancel" title="关闭" aria-label="关闭"><i data-lucide="x"></i></button>
+      </form>
+      <div class="dialog-body">
+        <section class="settings-section">
+          <div class="settings-heading"><div><h3>实时批量获取</h3><p>后台轮转并发拉取，每批完成后自动转换为中文。</p></div></div>
+          <label class="field-label" for="refresh-seconds">批次间隔
+            <select id="refresh-seconds">
+              <option value="15">15 秒（推荐）</option>
+              <option value="30">30 秒</option>
+              <option value="60">1 分钟</option>
+              <option value="120">2 分钟</option>
+              <option value="300">5 分钟</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="settings-section">
+          <div class="settings-heading"><div><h3>资讯来源</h3><p>来源按发布主体和编辑责任分级，可单独停用。</p></div></div>
+          <div class="source-legend" aria-label="来源等级"><span>官方发布</span><span>一线媒体</span><span>专业媒体</span></div>
+          <div id="source-settings-list" class="source-settings-list"></div>
+        </section>
+
+        <section class="settings-section">
+          <div class="settings-heading"><div><h3>添加 RSS 来源</h3><p>支持标准 RSS / Atom 订阅地址。</p></div></div>
+          <form id="source-form" class="source-form">
+            <label>名称<input name="name" required placeholder="例如：公司公告" /></label>
+            <label>RSS 地址<input name="url" type="url" required placeholder="https://example.com/feed.xml" /></label>
+            <label>地区<select name="region"><option>国内</option><option>国际</option></select></label>
+            <label>类别<select name="category"><option>要闻</option><option>财经</option><option>股票</option><option>投资</option><option>科技</option><option>数码</option><option>体育</option><option>经济</option><option>政策</option><option>监管</option><option>交易</option></select></label>
+            <button class="primary-button" type="submit"><i data-lucide="plus"></i>添加来源</button>
+          </form>
+        </section>
+      </div>
+    </dialog>
+
+    <dialog id="reader-dialog" class="reader-dialog">
+      <div class="reader-frame">
+        <header class="reader-head">
+          <div class="reader-identity">
+            <span>天机阁 · 软件内阅读</span>
+            <strong id="reader-source">--</strong>
+          </div>
+          <div class="reader-tools">
+            <div class="reader-mode" role="group" aria-label="正文语言">
+              <button class="active" type="button" data-reader-mode="zh">中文</button>
+              <button type="button" data-reader-mode="original">原文</button>
+            </div>
+            <button class="icon-button" type="button" data-reader-font="decrease" title="缩小正文" aria-label="缩小正文"><i data-lucide="minus"></i></button>
+            <button class="icon-button" type="button" data-reader-font="increase" title="放大正文" aria-label="放大正文"><i data-lucide="plus"></i></button>
+            <button class="icon-button" type="button" id="reader-refresh" title="重新获取正文" aria-label="重新获取正文"><i data-lucide="rotate-cw"></i></button>
+            <a class="icon-button" id="reader-external" href="#" target="_blank" rel="noopener noreferrer" title="在浏览器打开原文" aria-label="在浏览器打开原文"><i data-lucide="external-link"></i></a>
+            <form method="dialog">
+              <button class="icon-button" value="cancel" title="关闭阅读器" aria-label="关闭阅读器"><i data-lucide="x"></i></button>
+            </form>
+          </div>
+        </header>
+        <main id="reader-content" class="reader-content" aria-live="polite"></main>
+      </div>
+    </dialog>
+
+    <div id="toast-region" class="toast-region" aria-live="polite"></div>
+
+    <script src="/vendor/lucide/lucide.min.js"></script>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
